@@ -1,0 +1,424 @@
+# include <stdio.h>
+# include <string.h>
+#include <stdlib.h>
+
+struct profile{
+    
+    char username[100];
+    int password;
+    char emailID[100];
+    int mobile;
+    int pack;
+    char friends[30][50];
+
+}profil;
+
+struct signin{
+    struct profile prof;
+}signi;
+
+struct login{
+
+    char username[100];
+    int password;
+    struct signin sign;
+}logi;
+
+
+struct explore{
+
+    int genre;
+    int language;
+    char actor[100];
+    char movie[100];
+}expl;
+
+
+
+void lo();
+void sign();
+void pr();
+void downloads();
+void explo();
+void cha();
+void movie();
+
+struct login *ptr = &logi;
+struct profile *pfl = &profil;
+struct explore *ex = &expl;
+
+
+
+int main(){
+
+    printf("WELCOME TO MOVIE SHARER:\n");
+    FILE *fp;
+    fp = fopen("file_handle.txt","w");
+    lo(fp);
+    app(ptr,fp);
+    return 0;
+}
+
+void app(struct login *ptr, FILE *fp){
+
+    int k;
+    
+    
+    fputs("WELCOME TO MOVIE SHARER\n\n",fp); 
+
+    fputs("Login\nUsername: ", fp);
+    fprintf(fp,"%s",logi.username);
+    fputs("\nPassword: ", fp);
+    fprintf(fp,"%d\n",logi.password);
+    printf("Hi %s, You have Successfully logged in\n\n", ptr->username); 
+
+    
+
+    int t=1;
+    while(t)
+    {
+        printf("1.Movies\n2.Explore\n3.Downloads\n4.Chat\n5.Profile\n6.Exit\n");
+        scanf("%d",&k);
+        if(k==1){
+
+            movie(fp,ex,ptr);
+        }else if (k==2)
+        {
+            explo(fp);
+            
+        }else if (k==3)
+        {
+            downloads(fp);
+        }else if (k==4)
+        {
+            cha(fp);
+        }else if (k==5)
+        {
+            pr(fp, pfl);
+        }else if(k==6)
+        {
+            t = 0;
+            //application closes
+        }
+        else{
+            printf("invalid option!\n");
+        }
+    }
+
+}
+
+void sign(struct profile *pfl,FILE *fp){
+
+    printf("Enter username:");
+    scanf("%s",profil.username);
+    printf("%s\n", profil.username);
+    printf("Enter password:");
+    scanf("%d",&profil.password);
+    printf("Enter emailID:");
+    scanf("%s",profil.emailID);
+    printf("Enter mobile number:");
+    scanf("%d",&profil.mobile);
+    printf("Select plan pack:\n1.Gold-500/-\n2.Platinum-1000/-");
+    scanf("%d",&profil.pack);
+
+    fputs("New User: \n", fp);
+    fputs("Username: ", fp);
+    fprintf(fp, "%s\n", pfl->username);
+    fputs("Password: ", fp);
+    fprintf(fp, "%d\n", pfl->password);
+    fputs("Email ID: ", fp);
+    fprintf(fp, "%s\n", pfl->emailID);
+    fputs("Mobile Number: ", fp);
+    fprintf(fp, "%d\n", pfl->mobile);
+    fputs("Pack: ", fp);
+    fprintf(fp, "%d\n", pfl->pack);
+    lo(fp);
+}
+
+void lo(FILE *fp){
+
+    int h;
+    printf("Do u have an account?\n1.Yes\n2.No: \n");
+    scanf("%d",&h);
+    if (h==1)
+    {
+        printf("Enter username:");
+        scanf("%s",logi.username);
+        printf("Enter password:");
+        scanf("%d",&logi.password);
+        
+    }else if (h==2)
+    {
+        sign(pfl, fp);
+    }
+    return;
+}
+
+void movie(FILE *fp,struct explore *ex,struct profile *ptr){
+
+    printf("Enter the movie name:");
+    scanf("%s",expl.movie);
+    printf("You have selected the movie %s\n",ex->movie);
+    fputs("Movie selected: ", fp);
+    fprintf(fp,"%s\n", ex->movie);
+    int gl;
+    printf("Do you want to add your friends?\n1.Yes\n2.No: \n");
+    scanf("%d",&gl);
+    if (gl==1)
+    {
+        int w;
+        printf("How many friends u want to add?");
+        scanf("%d",&w);
+        fputs("Friends added: \n", fp);
+            for(int i = 0; i<w; i++){
+                char name[50];
+                printf("Enter the name of your friend %d to add: ", i + 1);
+                scanf("%s", name);
+                fprintf(fp, "   %s\n", name);
+                printf("Added %s to your friends list\n\n", name);
+
+            }
+        
+    }else if (gl==2)
+    {
+        fputs("No friends added\n", fp);
+        printf("Ok %s enjoy your movie!!\n", ptr->username);
+        printf("***************\n\n");
+    } 
+}
+
+void pr(FILE *fp, struct profile *pfl){
+
+    int h;
+    printf("1.Account details\n2.Make changes\n");
+    scanf("%d",&h);
+    if (h==1)
+    {
+        printf("\nUsername: %s\n",profil.username);
+        printf("Password: %d\n",profil.password);
+        printf("Mobile number: %d\n",pfl->mobile);
+        printf("Email id: %s\n",profil.emailID);
+        printf("Plan pack: %d\n\n",profil.pack);
+    }else if(h==2){
+
+        int y;
+        printf("What u want to change?\n1.Username\n2.Password\n3.mobile number\n4.emailID\n5.pack\n");
+        scanf("%d" ,&y);
+        if (y==1)
+        {
+            printf("\nEnter new username:");
+            scanf("%s",profil.username);
+            fputs("Username changed to ", fp);
+            fprintf(fp, "%s\n", pfl->username);
+        }else if (y==2)
+        {
+            printf("\nEnter new Password:");
+            scanf("%d",&profil.password);
+            fputs("Password changed to ", fp);
+            fprintf(fp, "%d\n", pfl->password);
+        }else if (y==3)
+        {
+            printf("\nEnter new mobile number:");
+            scanf("%d",&profil.mobile);
+            fputs("Mobile number changed to ", fp);
+            fprintf(fp, "%d\n", pfl->mobile);
+        }else if (y==4)
+        {
+            printf("\nEnter new emailID:");
+            scanf("%s",&profil.emailID);
+            fputs("Email Id changed to ", fp);
+            fprintf(fp, "%s\n", pfl->emailID);
+        }else if (y==5)
+        {
+            printf("\nEnter new pack:\n1.Gold-500/-\n2.Platinum-1000/-");
+            scanf("%d",&profil.pack);
+            fputs("Plan pack changed to ", fp);
+            fprintf(fp, "%d\n", pfl->pack);
+        }else{
+            printf("\nINVALID\n");
+        }  
+        printf("\nYour account details have been changed: \n");
+        printf("Username: %s\n",pfl->username);
+        printf("Password: %d\n",pfl->password);
+        printf("Mobile number: %d\n",pfl->mobile);
+        printf("Email id: %s\n",pfl->emailID);
+        printf("Plan pack: %d\n\n",pfl->pack);
+    } 
+    
+    
+}
+
+void downloads(FILE *fp){
+
+    int option,k;
+    printf("\n1.Downloaded movies\n2.Downloading movies\n");
+    scanf("%d",&option);
+    if (option==1)
+    {
+        printf("\n1.The Godfather [Play][Delete]\n2.Nayakan [Play][Delete]\n3.Malik [Play][Delete]\n\n");
+        fputs("\nDownloaded movies\n", fp);
+        fputs("\n1.The Godfather [Play][Delete]\n2.Nayakan [Play][Delete]\n3.Malik [Play][Delete]\n\n", fp);
+        printf("\nDo you want to exit downloads?\n1.Yes\n2.No\n");
+        scanf("%d",&k);
+        if (k==1)
+        {
+            return;
+        }else if (k==2)
+        {
+            downloads(fp);
+        }else{
+            printf("\nInvalid input!\n");
+            downloads(fp);
+        }
+        
+        
+    }else if (option==2)
+    {
+        printf("\n1.Goodfellas [Pause][Resume][Cancel]\n2.Thalapathi [Pause][Resume][Cancel]\n3.Pudhupettai [Pause][Resume][Cancel]\n\n");
+        fputs("\nDownloading movies: \n", fp);
+        fputs("\n1.Goodfellas [Pause][Resume][Cancel]\n2.Thalapathi [Pause][Resume][Cancel]\n3.Pudhupettai [Pause][Resume][Cancel]\n\n", fp);
+        printf("\nDo you want to exit downloads?\n1.Yes\n2.No\n");
+        
+        scanf("%d",&k);
+        if (k==1)
+        {
+            return;
+        }else if (k==2)
+        {
+            downloads(fp);
+        }else{
+            printf("\nInvalid input!\n");
+        }
+    }
+    else{
+        printf("\nInvalid Input!\n");
+        downloads(fp);
+    }
+    
+}
+
+void explo(FILE *fp){
+
+    int e;
+    printf("\nSelect movies by\n1.Genre\n2.Language\n3.Actor name\n");
+    scanf("%d",&e);
+    if (e==1)
+    {
+        printf("\n1.Action\n2.Adventure\n3.Crime\n4.Drama\n5.Comdey\n6.Romance\n");
+        scanf("%d",&expl.genre);
+
+        if (expl.genre==1)
+        {
+            printf("You have selected Action movies\n************\n\n");
+            fputs("Action Movies Selected\n", fp);
+        }else if (expl.genre==2)
+        {
+            printf("You have selected Adventure movies\n************\n\n");
+            fputs("Adventure Movies Selected\n", fp);
+        }else if (expl.genre==3)
+        {
+            printf("You have selected Crime movies\n************\n\n");
+            fputs("Crime Movies Selected\n", fp);
+        }else if (expl.genre==4)
+        {
+            printf("You have selected Drama movies\n************\n\n");
+            fputs("Drama Movies Selected\n", fp);
+        }else if (expl.genre==5)
+        {
+            printf("You have selected Comedy movies\n************\n\n");
+            fputs("Comedy Movies Selected\n", fp);
+        }else if (expl.genre==6)
+        {
+            printf("You have selected Romance movies\n************\n\n");
+            fputs("Romance Movies Selected\n", fp);
+        } 
+        else{
+            printf("\nINVALID\n");
+        }  
+    }else if (e==2)
+    {
+        printf("1.English\n2.Tamil\n3.Telugu\n4.Malayalam\n5.Hindi\n");
+        scanf("%d",&expl.language);
+        if (expl.language==1)
+        {
+            printf("You have selected English\n************\n\n");
+            fputs("English Movies Selected\n", fp);
+        }else if (expl.language==2)
+        {
+            printf("You have selected Tamil\n************\n\n");
+            fputs("Tamil Movies Selected\n", fp);
+        }else if (expl.language==3)
+        {
+            printf("You have selected Telugu\n************\n\n");
+            fputs("Telugu Movies Selected\n", fp);
+        }else if (expl.language==4)
+        {
+            printf("You have selected Malayalam\n************\n\n");
+            fputs("Malayalam Movies Selected\n", fp);
+        }else if (expl.language==5)
+        {
+            printf("You have selected Hindi\n************\n\n");
+            fputs("Hindi Movies Selected\n", fp);
+        }else{
+            printf("\nInvalid Input\n");
+        }
+    }else if (e==3)
+    {
+        printf("Enter the actor name:");
+        scanf("%s", expl.actor);
+        printf("You have selected %s's movies\n************\n\n",expl.actor);
+        fprintf(fp,"%s\n", expl.actor);
+    }else{
+        printf("\nINVALID\n");
+    }  
+    
+}
+
+void cha(FILE *fp){
+    
+    int q;
+    char message[100];
+    printf("\n\nSelect a friend\n1.Ashwanthram\n2.Ashwin\n3.Aswathy\n4.Avasarala Vignesh\n5.Deenadayalan\n");
+    scanf("%d",&q);
+    char c;
+    if (q==1)
+    {
+        printf("Write a message to Ashwanthram:\n");
+        scanf("%s", message);
+        printf("\nMessage sent to Ashwanthram - %s\n",message);
+        fputs("\nMessage sent to Ashwanthram: ", fp);
+        fprintf(fp, "%s\n",message);
+    }else if (q==2)
+    {
+        printf("Write a message to Ashwin:");
+        scanf("%s", message);
+        printf("\nMessage sent to Ashwin - %s\n",message);
+        fputs("\nMessage sent to Ashwin: ", fp);
+        fprintf(fp, "%s\n", message);
+    }else if (q==3)
+    {
+        printf("Write a message to Aswathy:");
+        scanf("%s", message);
+        printf("\nMessage sent to Aswathy - %s\n",message);
+        fputs("\nMessage sent to Aswathy: ", fp);
+        fprintf(fp, "%s\n", message);
+    }else if (q==4)
+    {
+        printf("Write a message to Avasarala Vignesh:");
+        scanf("%s", message);
+        printf("\nMessage sent to Avasarala Vignesh - %s\n",message);
+        fputs("\nMessage sent to Avasarala Vignesh: ", fp);
+        fprintf(fp, "%s\n", message);
+    }else if (q==5)
+    {
+        printf("Write a message to Deenadayalan:");
+        scanf("%s", message);
+        printf("\nMessage sent to Deenadayalan - %s\n",message);
+        fputs("\nMessage sent to Deenadayalan: ", fp);
+        fprintf(fp, "%s\n", message);
+    }else{
+        printf("INVALID");
+    }
+    
+    fclose(fp);
+}
